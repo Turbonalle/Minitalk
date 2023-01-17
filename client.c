@@ -64,39 +64,20 @@ int binarify(char c, pid_t pid)
 int main(int ac, char *av[])
 {
 	pid_t pid;
-	char *num;
-	int len;
 	int i;
 
 	if (ac != 3)
 	{
-		printf("./client \"pid\" \"message\"\n");
+		printf("./client \"message\" \"pid\"\n");
 		return (0);
 	}
 	pid = atoi(av[2]);
-	len = strlen(av[1]);
-	num = ft_itoa(len);
-	i = 0;
-	while (num[i] != '\0')
-	{
-		binarify(num[i], pid);
-		printf("num[%d] = %c\n", i, num[i]);
-		i++;
-	}
-	while (i < 32)
-	{
-		if (kill(pid, SIGUSR1) == -1)
-		{
-			write(2, "Error!\n", 7);
-			return (0);
-		}
-		i++;
-	}
 	i = 0;
 	while (av[1][i])
 	{
 		binarify(av[1][i], pid);
 		i++;
 	}
+	binarify('\0', pid);
 	return (0);
 }

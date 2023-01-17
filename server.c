@@ -3,26 +3,39 @@
 #include <stdio.h>
 #include <signal.h>
 
-/*
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
 
-- Read in blocks of 8.
-	- Create a linked list node for each block read.
-- If '11111111' is read 4 times in a row:
-	- Decode the blocks before that.
-	- 'n' = the decoded number.
-- Malloc 'n' bytes.
-- Read blocks of 8 'n' times.
-	- Decode each block into a character.
-	- Copy character into string.
-- Print string.
-*/
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
+char	*ft_join_str_with_char(char const *s1, char c)
+{
+	char	*joined_str;
+	size_t	i;
+	size_t	len;
 
+	len = ft_strlen(s1) + 1;
+	joined_str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!joined_str)
+		return (NULL);
+	i = 0;
+	while (*s1)
+		joined_str[i++] = *s1++;
+	joined_str[i++] = c;
+	joined_str[i] = 0;
+	return (joined_str);
+}
 
 void handler(int signal)
 {
     static int i = 0;
     static unsigned char c = 0;
+	char *str;
 
     c <<= 1;
     if (signal == SIGUSR1)
@@ -30,39 +43,20 @@ void handler(int signal)
     i++;
 	if (i == 8)
 	{
-		write(1, &c, 1);
+		str = ft_join_str_with_char(str, c);
+		if (!c)
+			printf("%s\n", str);
         i = 0;
         c = 0;
     }
 }
-
-
-
-// void handler(int signal)
-// {
-//     static int i = 0;
-//     static unsigned char c = 0;
-
-//     c <<= 1;
-//     if (signal == SIGUSR1)
-// 		c++;
-//     i++;
-// 	if (i == 8)
-// 	{
-// 		write(1, &c, 1);
-//         i = 0;
-//         c = 0;
-//     }
-// }
-
-
 
 int main(void)
 {
 	struct sigaction action;
 	int pid;
 
-	sigemptyset(&action.sa_mask); // What does this do?
+	sigemptyset(&action.sa_mask);
 	action.sa_handler = handler;
 	pid = getpid();
 	printf("pid = %d\n", pid);
@@ -74,8 +68,3 @@ int main(void)
 	}
 	return (0);
 }
-
-/*
-MAX_INT
-11111111111111111111111111111111	(4 * 8)
-*/
