@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <strings.h>
 #include <signal.h>
 
 size_t	ft_strlen(const char *str)
@@ -13,7 +14,7 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_join_str_with_char(char const *s1, char c)
+char	*ft_join_str_with_char(const char *s1, char c)
 {
 	char	*joined_str;
 	size_t	i;
@@ -35,9 +36,10 @@ void handler(int signal)
 {
     static int i = 0;
     static unsigned char c = 0;
-	char *str;
+	static char *str;
+	int j;
 
-    c <<= 1;
+	c <<= 1;
     if (signal == SIGUSR1)
 		c++;
     i++;
@@ -45,7 +47,15 @@ void handler(int signal)
 	{
 		str = ft_join_str_with_char(str, c);
 		if (!c)
-			printf("%s\n", str);
+		{
+			printf("%s\n", str); // FT!!!!!!!!
+			j = 0;
+			while (str[j])
+			{
+				str[j] = 0;
+				j++;
+			}
+		}
         i = 0;
         c = 0;
     }
@@ -60,8 +70,9 @@ int main(void)
 	action.sa_handler = handler;
 	pid = getpid();
 	printf("pid = %d\n", pid);
-	while (1)
+	while (42)
 	{
+		
 		sigaction(SIGUSR1, &action, NULL);
 		sigaction(SIGUSR2, &action, NULL);
 		pause();

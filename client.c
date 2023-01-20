@@ -4,32 +4,6 @@
 #include <stdlib.h>	// atoi()
 #include <signal.h>	// kill()
 
-char *ft_itoa(int num)
-{
-	char *str;
-	int temp;
-	int len;
-
-	temp = num;
-	len = 0;
-	while (temp > 0)
-	{
-		temp /= 10;
-		len++;
-	}
-	str = (char *)malloc(sizeof(char) * (len + 1));
-	str[len] = '\0';
-	while (len > 0)
-	{
-		len--;
-		str[len] = num % 10 + '0';
-		num /= 10;
-	}
-	return (str);
-}
-
-
-
 int binarify(char c, pid_t pid)
 {
 	int bit;

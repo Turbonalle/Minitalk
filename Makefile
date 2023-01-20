@@ -4,7 +4,7 @@ EXE_C = client
 SRC_S = server.c
 SRC_C = client.c
 OBJECTS = *.o
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 
 .PHONY: all run clean fclean re
 
