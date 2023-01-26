@@ -52,6 +52,7 @@ void handler(int signal)
 		if (!c)
 		{
 			printf("%s\n", str); // FT!!!!!!!!
+			kill(pid, SIGUSR1);
 			j = 0;
 			while (str[j])
 			{
@@ -67,7 +68,7 @@ void handler(int signal)
 int main(void)
 {
 	struct sigaction action;
-	int pid;
+	pid_t pid;
 
 	sigemptyset(&action.sa_mask);
 	action.sa_handler = handler;
