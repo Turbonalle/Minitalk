@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <strings.h>
 #include <signal.h>
+#include "ft_printf/ft_printf.h"
 
 size_t	ft_strlen(const char *str)
 {
@@ -14,7 +15,7 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_join_str_with_char(const char *s1, char c)
+char	*ft_join_str_with_char(char *s1, char c)
 {
 	char	*joined_str;
 	size_t	i;
@@ -23,15 +24,19 @@ char	*ft_join_str_with_char(const char *s1, char c)
 	if (s1)
 		len = ft_strlen(s1) + 1;
 	else
-		len = 1;
-	joined_str = (char *)malloc(sizeof(char) * (len + 1));
+		len = 2;
+	joined_str = (char *)malloc(sizeof(char) * (len));
 	if (!joined_str)
 		return (NULL);
 	i = 0;
-	while (s1 && *s1)
-		joined_str[i++] = *s1++;
+	while (s1 && s1[i])
+	{
+		joined_str[i] = s1[i];
+		i++;
+	}
 	joined_str[i++] = c;
 	joined_str[i] = 0;
+	free(s1);
 	return (joined_str);
 }
 
@@ -51,28 +56,28 @@ void handler(int signal)
 		str = ft_join_str_with_char(str, c);
 		if (!c)
 		{
-			printf("%s\n", str); // FT!!!!!!!!
+			ft_printf("%s\n", str);
 			j = 0;
 			while (str[j])
 			{
 				str[j] = 0;
 				j++;
 			}
+			kill(pid, SIGUSR1);
 		}
         i = 0;
         c = 0;
     }
 }
 
-int main(void)
+int main()
 {
 	struct sigaction action;
 	int pid;
-
-	sigemptyset(&action.sa_mask);
+	//sigemptyset(&action.sa_mask);
 	action.sa_handler = handler;
 	pid = getpid();
-	printf("pid = %d\n", pid);
+	ft_printf("pid = %d\n", pid);
 	while (1)
 	{
 		sigaction(SIGUSR1, &action, NULL);
