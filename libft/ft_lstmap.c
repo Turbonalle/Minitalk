@@ -6,13 +6,13 @@
 /*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 18:35:24 by marvin            #+#    #+#             */
-/*   Updated: 2022/11/30 08:09:44 by jbagger          ###   ########.fr       */
+/*   Updated: 2023/02/21 10:01:30 by jbagger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
 	t_list	*temp;
 	t_list	*i;
@@ -22,7 +22,8 @@ t_list *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	temp = NULL;
 	while (lst)
 	{
-		if (!(i = ft_lstnew(f(lst->content))))
+		i = ft_lstnew(f(lst->content));
+		if (!i)
 		{
 			ft_lstclear(&temp, del);
 			return (NULL);

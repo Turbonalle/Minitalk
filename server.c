@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/21 09:53:17 by jbagger           #+#    #+#             */
+/*   Updated: 2023/02/21 13:01:40 by jbagger          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,17 +52,17 @@ char	*ft_join_str_with_char(char *s1, char c)
 	return (joined_str);
 }
 
-void handler(int signal)
+void	handler(int signal)
 {
-    static int i = 0;
-    static unsigned char c = 0;
-	static char *str;
-	int j;
+	static int				i = 0;
+	static unsigned char	c = 0;
+	static char				*str;
+	int						j;
 
 	c <<= 1;
-    if (signal == SIGUSR1)
+	if (signal == SIGUSR1)
 		c++;
-    i++;
+	i++;
 	if (i == 8)
 	{
 		str = ft_join_str_with_char(str, c);
@@ -63,18 +75,18 @@ void handler(int signal)
 				str[j] = 0;
 				j++;
 			}
-			kill(pid, SIGUSR1);
+			// free str!!!
 		}
-        i = 0;
-        c = 0;
-    }
+		i = 0;
+		c = 0;
+	}
 }
 
-int main()
+int	main(void)
 {
-	struct sigaction action;
-	int pid;
-	//sigemptyset(&action.sa_mask);
+	struct sigaction	action;
+	int					pid;
+
 	action.sa_handler = handler;
 	pid = getpid();
 	ft_printf("pid = %d\n", pid);

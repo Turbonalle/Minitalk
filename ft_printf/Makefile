@@ -1,5 +1,4 @@
 NAME = libftprintf.a
-MAIN = main.c
 EXE = exe.out
 SRC = ft_printf.c ft_printf_utils.c
 OBJECTS = *.o
@@ -16,10 +15,6 @@ $(NAME):
 	@cc $(FLAGS) -I $(HEADER) -c $(SRC)
 	@ar rcs $(NAME) $(OBJECTS)
 	@echo "Ft_printf:	Compiled!"
-
-run:
-	@gcc $(MAIN) $(NAME) -o $(EXE)
-	@./$(EXE)
 
 clean:
 	@$(MAKE) clean -C ../libft

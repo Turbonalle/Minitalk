@@ -6,13 +6,13 @@
 /*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:27:37 by jbagger           #+#    #+#             */
-/*   Updated: 2022/11/09 16:44:00 by jbagger          ###   ########.fr       */
+/*   Updated: 2023/02/21 09:58:14 by jbagger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void ft_lstadd_back(t_list **lst, t_list *new)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*end;
 

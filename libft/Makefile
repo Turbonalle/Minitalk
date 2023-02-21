@@ -28,11 +28,11 @@ $(NAME):
 	@echo "Libft:		Compiled!"
 
 clean:
-	@/bin/rm -f $(OBJECTS) $(BOBJECTS)
+	@rm -f $(OBJECTS)
 	@echo "Libft:		Object files removed!"
 
 fclean: clean
-	@/bin/rm -f $(NAME)
+	@rm -f $(NAME)
 	@echo "Libft:		Library removed!"
 
 re: fclean all
