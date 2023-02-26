@@ -17,6 +17,8 @@
 #include <signal.h>
 #include "ft_printf/ft_printf.h"
 
+static int message_length = 0;
+
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -56,9 +58,21 @@ void	handler(int signal)
 {
 	static int				i = 0;
 	static unsigned char	c = 0;
+	static int				len = 0;
 	static char				*str;
 	int						j;
 
+	if (message_length == 0 && i < 32)
+	{
+		i++;
+		len <<= 1;
+		len += (signal == SIGUSR1);
+		if (i == 32)
+		{
+			message_length = len;
+			i = 0;
+		}
+	}
 	c <<= 1;
 	if (signal == SIGUSR1)
 		c++;
