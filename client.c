@@ -6,7 +6,7 @@
 /*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 09:51:35 by jbagger           #+#    #+#             */
-/*   Updated: 2023/02/21 13:01:33 by jbagger          ###   ########.fr       */
+/*   Updated: 2023/02/27 13:27:39 by jbagger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,39 @@
 #include <string.h>	// strlen()
 #include <stdlib.h>	// atoi()
 #include <signal.h>	// kill()
-#include "ft_printf/ft_printf.h"
+#include "libft/includes/libft.h"
+#include "libft/includes/ft_printf.h"
 
-char	*ft_itoa(int num)
+int	send_bits_int(unsigned int n, pid_t pid, unsigned int len, int bits)
 {
-	char	*str;
-	int		temp;
-	int		len;
+	int	bit;
 
-	temp = num;
-	len = 0;
-	while (temp > 0)
+	bit = 1;
+	while (bits-- > 0)
 	{
-		temp /= 10;
-		len++;
+		if ((n & bit))
+		{
+			if (kill(pid, SIGUSR1) == -1)
+			{
+				write(2, "Error!\n", 7);
+				return (0);
+			}
+		}
+		else
+		{
+			if (kill(pid, SIGUSR2) == -1)
+			{
+				write(2, "Error!\n", 7);
+				return (0);
+			}
+		}
+		usleep(400 + ((len / 30) * 50));
+		bit <<= 1;
 	}
-	str = (char *)malloc(sizeof(char) * (len + 1));
-	str[len] = '\0';
-	while (len > 0)
-	{
-		len--;
-		str[len] = num % 10 + '0';
-		num /= 10;
-	}
-	return (str);
+	return (1);
 }
 
-int	binarify(char c, pid_t pid)
+int	send_bits_char(char c, pid_t pid)
 {
 	int	bit;
 
@@ -64,7 +70,7 @@ int	binarify(char c, pid_t pid)
 				return (0);
 			}
 		}
-		usleep(100);
+		usleep(200);
 		bit >>= 1;
 	}
 	return (1);
@@ -72,23 +78,25 @@ int	binarify(char c, pid_t pid)
 
 int	main(int ac, char *av[])
 {
-	pid_t	pid;
-	int		i;
+	pid_t			pid;
+	unsigned int	len;
+	unsigned int	i;
 
-	// count len, send to binarify, chenge usleep compared to len!!!
 	if (ac != 3)
 	{
 		write(2, "Expected input: [./client] [message] [pid]\n", 43);
 		return (0);
 	}
 	pid = atoi(av[2]);
+	len = ft_strlen(av[1]);
+	send_bits_int(len, pid, len, 32);
 	i = 0;
 	while (av[1][i])
 	{
-		if (!binarify(av[1][i], pid))
+		if (!send_bits_char(av[1][i], pid))
 			return (0);
 		i++;
 	}
-	binarify('\0', pid);
+	send_bits_char('\0', pid);
 	return (0);
 }

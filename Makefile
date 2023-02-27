@@ -1,3 +1,4 @@
+NAME = both
 SHELL = /bin/bash
 EXE_S = server
 EXE_C = client
@@ -5,26 +6,33 @@ SRC_S = server.c
 SRC_C = client.c
 OBJECTS = *.o
 FLAGS = -Wall -Wextra -Werror
-LIBFLAGS = -Lft_printf -lftprintf
+LIBFLAGS = -Llibft -lft
 
 .PHONY: all run clean fclean re
 
-all: $(EXE_S) $(EXE_C)
-	@$(MAKE) -C ./ft_printf
+all: $(NAME)
+
+%.o: %.c
+	cc $(FLAGS) -c $< -o $@
+
+$(NAME): $(EXE_S) $(EXE_C)
+
 $(EXE_S): server.o
+	@$(MAKE) -C ./libft
 	@cc $(FLAGS) $(SRC_S) -o $(EXE_S) $(LIBFLAGS)
 	@echo "Server compiled!"
 $(EXE_C): client.o
+	@$(MAKE) -C ./libft
 	@cc $(FLAGS) $(SRC_C) -o $(EXE_C) $(LIBFLAGS)
 	@echo "Client compiled!"
 
 clean: $(OBJECTS)
-	@$(MAKE) clean -C ./ft_printf
+	@$(MAKE) clean -C ./libft
 	@rm -f $(OBJECTS)
 	@echo "Object files removed!"
 
 fclean: clean
-	@$(MAKE) fclean -C ./ft_printf
+	@$(MAKE) fclean -C ./libft
 	@rm -f $(EXE_S) $(EXE_C)
 	@echo "Executables removed!"
 
