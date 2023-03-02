@@ -6,7 +6,7 @@
 /*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 09:53:17 by jbagger           #+#    #+#             */
-/*   Updated: 2023/02/27 18:02:26 by jbagger          ###   ########.fr       */
+/*   Updated: 2023/03/02 09:30:38 by jbagger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,20 @@
 
 //static unsigned int	message_length = 0;
 
-
-//----TEST SEPARATING FUNCTION-------------------------------------------------- (WORKS)
+//----TEST SEPARATING FUNCTION------------------------------------------ (WORKS)
 
 typedef struct s_info
 {
 	char	*str;
 	char	c;
 	int		i;
+	int		j;
 	int		len;
 	int		check;
 }			t_info;
 
 void	handle_length(int signal, t_info *info)
 {
-	
 	info->len += (signal == SIGUSR1) << info->i;
 	(info->i)++;
 	if (info->i == 32)
@@ -48,27 +47,24 @@ void	handle_length(int signal, t_info *info)
 
 void	handle_message(int signal, t_info *info)
 {
-	static int	j = 0;
-	
 	info->c <<= 1;
 	if (signal == SIGUSR1)
 		info->c++;
 	info->i++;
 	if (info->i == 8)
 	{
-		info->str[j] = info->c;
-		j++;
+		info->str[info->j] = info->c;
+		info->j++;
 		if (!info->c)
 		{
 			ft_printf("%s\n", info->str);
-			j = 0;
-			while (info->str[j])
+			info->j = 0;
+			while (info->str[info->j])
 			{
-				info->str[j] = 0;
-				j++;
+				info->str[info->j] = 0;
+				info->j++;
 			}
-			j = 0;
-			//free(str);
+			info->j = 0;
 			info->len = 0;
 			info->check = 0;
 		}
@@ -77,11 +73,12 @@ void	handle_message(int signal, t_info *info)
 	}
 }
 
-void init_variables(t_info *info)
+void	init_variables(t_info *info)
 {
 	info->c = 0;
 	info->check = 0;
 	info->i = 0;
+	info->j = 0;
 	info->len = 0;
 	info->str = NULL;
 }
@@ -102,9 +99,7 @@ void	handler(int signal)
 		handle_message(signal, &info);
 }
 
-
-//----TEST WITHOUT GLOBAL------------------------------------------------------- (WORKS)
-
+//----TEST WITHOUT GLOBAL----------------------------------------------- (WORKS)
 
 // void	handler(int signal)
 // {
@@ -158,9 +153,7 @@ void	handler(int signal)
 // 	}
 // }
 
-
 //----ACTUAL--------------------------------------------------------------------
-
 
 // void	handler(int signal)
 // {
