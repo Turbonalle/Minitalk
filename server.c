@@ -6,31 +6,21 @@
 /*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 09:53:17 by jbagger           #+#    #+#             */
-/*   Updated: 2023/03/02 09:30:38 by jbagger          ###   ########.fr       */
+/*   Updated: 2023/03/02 11:01:07 by jbagger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <strings.h>
-#include <signal.h>
-#include "libft/includes/libft.h"
-#include "libft/includes/ft_printf.h"
+#include "includes/minitalk.h"
 
-//static unsigned int	message_length = 0;
-
-//----TEST SEPARATING FUNCTION------------------------------------------ (WORKS)
-
-typedef struct s_info
+void	init_variables(t_info *info)
 {
-	char	*str;
-	char	c;
-	int		i;
-	int		j;
-	int		len;
-	int		check;
-}			t_info;
+	info->c = 0;
+	info->check = 0;
+	info->i = 0;
+	info->j = 0;
+	info->len = 0;
+	info->str = NULL;
+}
 
 void	handle_length(int signal, t_info *info)
 {
@@ -73,16 +63,6 @@ void	handle_message(int signal, t_info *info)
 	}
 }
 
-void	init_variables(t_info *info)
-{
-	info->c = 0;
-	info->check = 0;
-	info->i = 0;
-	info->j = 0;
-	info->len = 0;
-	info->str = NULL;
-}
-
 void	handler(int signal)
 {
 	static t_info	info;
@@ -98,112 +78,6 @@ void	handler(int signal)
 	else
 		handle_message(signal, &info);
 }
-
-//----TEST WITHOUT GLOBAL----------------------------------------------- (WORKS)
-
-// void	handler(int signal)
-// {
-// 	static int				i = 0;
-// 	static unsigned char	c = 0;
-// 	static char				*str = NULL;
-// 	static int				j = 0;
-// 	static unsigned int		len = 0;
-// 	static int				check = 0;
-
-// 	if (check == 0 && i < 32)
-// 	{
-// 		len += (signal == SIGUSR1) << i;
-// 		i++;
-// 		if (i == 32)
-// 		{
-// 			len = 0;
-// 			i = 0;
-// 			str = malloc(sizeof(char) * (len + 1));
-// 			str[len] = '\0';
-// 			check = 1;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		c <<= 1;
-// 		if (signal == SIGUSR1)
-// 			c++;
-// 		i++;
-// 		if (i == 8)
-// 		{
-// 			str[j] = c;
-// 			j++;
-// 			if (!c)
-// 			{
-// 				ft_printf("%s\n", str);
-// 				j = 0;
-// 				while (str[j])
-// 				{
-// 					str[j] = 0;
-// 					j++;
-// 				}
-// 				j = 0;
-// 				//free(str);
-// 				len = 0;
-// 				check = 0;
-// 			}
-// 			i = 0;
-// 			c = 0;
-// 		}
-// 	}
-// }
-
-//----ACTUAL--------------------------------------------------------------------
-
-// void	handler(int signal)
-// {
-// 	static int				i = 0;
-// 	static unsigned char	c = 0;
-// 	static char				*str = NULL;
-// 	static int				j = 0;
-// 	static unsigned int		len = 0;
-
-// 	if (message_length == 0 && i < 32)
-// 	{
-// 		len += (signal == SIGUSR1) << i;
-// 		i++;
-// 		if (i == 32)
-// 		{
-// 			message_length = len;
-// 			len = 0;
-// 			i = 0;
-// 			str = malloc(sizeof(char) * (message_length + 1));
-// 			str[message_length] = '\0';
-// 		}
-// 	}
-// 	else
-// 	{
-// 		c <<= 1;
-// 		if (signal == SIGUSR1)
-// 			c++;
-// 		i++;
-// 		if (i == 8)
-// 		{
-// 			str[j] = c;
-// 			j++;
-// 			if (!c)
-// 			{
-// 				ft_printf("%s\n", str);
-// 				j = 0;
-// 				while (str[j])
-// 				{
-// 					str[j] = 0;
-// 					j++;
-// 				}
-// 				j = 0;
-// 				//free(str);
-// 				message_length = 0;
-// 			}
-// 			i = 0;
-// 			c = 0;
-// 		}
-// 	}
-// }
 
 int	main(void)
 {

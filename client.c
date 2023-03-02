@@ -6,17 +6,11 @@
 /*   By: jbagger <jbagger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 09:51:35 by jbagger           #+#    #+#             */
-/*   Updated: 2023/02/27 13:27:39 by jbagger          ###   ########.fr       */
+/*   Updated: 2023/03/02 11:03:11 by jbagger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>	// write()	usleep()
-#include <stdio.h>	// printf()
-#include <string.h>	// strlen()
-#include <stdlib.h>	// atoi()
-#include <signal.h>	// kill()
-#include "libft/includes/libft.h"
-#include "libft/includes/ft_printf.h"
+#include "includes/minitalk.h"
 
 int	send_bits_int(unsigned int n, pid_t pid, unsigned int len, int bits)
 {
@@ -76,24 +70,40 @@ int	send_bits_char(char c, pid_t pid)
 	return (1);
 }
 
+int	has_error(int ac, char *av[])
+{
+	int	i;
+
+	if (ac != 3)
+		return (1);
+	i = 0;
+	while (av[1][i])
+	{
+		if (!ft_isdigit(av[1][i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	main(int ac, char *av[])
 {
 	pid_t			pid;
 	unsigned int	len;
 	unsigned int	i;
 
-	if (ac != 3)
+	if (has_error(ac, av))
 	{
-		write(2, "Expected input: [./client] [message] [pid]\n", 43);
-		return (0);
+		write(2, "Expected input: [./client] [pid] [message]\n", 43);
+		return (-1);
 	}
-	pid = atoi(av[2]);
-	len = ft_strlen(av[1]);
+	pid = ft_atoi(av[1]);
+	len = ft_strlen(av[2]);
 	send_bits_int(len, pid, len, 32);
 	i = 0;
-	while (av[1][i])
+	while (av[2][i])
 	{
-		if (!send_bits_char(av[1][i], pid))
+		if (!send_bits_char(av[2][i], pid))
 			return (0);
 		i++;
 	}
